@@ -1,12 +1,40 @@
-{
+// 防抖和节流的目的都是为了减少不必要的计算，不浪费资源，只在适合的时候再进行触发计算。
+    {
       // 防抖 使用定时器来延迟执行需要跑的代码。 若方法多次触发，则把上次记录的延迟代码清除掉，重新开始 直到没有方法进来 则执行代码
+      // 防抖最常见使用的为输入验证
       function debounce(fn, wait) {
         let timeout = null;
         return function() {
           clearTimeout(timeout);
           timeout = setTimeout(() => {
-            console.log(this, arguments);
             fn.apply(this, arguments);
+            // this指向window .其实这里的this没有用。
+            // 之所以用fn.apply(this,arguments)而不用fn()，是因为要传参数，而且参数的个数不固定。
           }, wait)
         }
       }
+      function handle() {
+        console.log(Math.random());
+      }
+      window.addEventListener('scroll', debounce(handle, 500));
+    }
+    {
+      // 节流当持续触发某个事件时，会有规律的每隔时间n就执行一次函数。
+      function throttle(fn, wait) {
+        let canRun = true;  //通过闭包保存一个标记
+        return function() {
+          if(!canRun){
+            return;
+          }
+          canRun = false;
+          setTimeout(() => {
+            fn.apply(this, arguments);
+            canRun = true;
+          }, wait)
+        }
+      }
+      function sayHi(e) {
+        console.log(e.target.innerWidth, e.target.innerHeight);
+      }
+      window.addEventListener('resize', throttle(sayHi, 2000));
+    }
