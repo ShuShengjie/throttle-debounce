@@ -1,0 +1,12 @@
+{
+      // 防抖 使用定时器来延迟执行需要跑的代码。 若方法多次触发，则把上次记录的延迟代码清除掉，重新开始 直到没有方法进来 则执行代码
+      function debounce(fn, wait) {
+        let timeout = null;
+        return function() {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            console.log(this, arguments);
+            fn.apply(this, arguments);
+          }, wait)
+        }
+      }
